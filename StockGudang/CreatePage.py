@@ -1,8 +1,9 @@
-from StockGudang.style.Styles import *
+from .style.Styles import *
 from tkinter import messagebox
 
 class CreatePage(Frame):
-    def refreshpage(self):
+    def refreshpage(self, root):
+        root.bind('<Return>', lambda x: self.binder())
         self.refresher()
 
     def __init__(root, *args, **kwargs):
@@ -37,23 +38,23 @@ class CreatePage(Frame):
             data = {
                 'gudang': gudang.get(),
                 'barang': barang.get(),
-                'saldo': int(awal.get()),
+                'saldo': awal.get(),
                 'satuan': satuan.get()
             }
             if data['gudang'] == "":
                 msgtxt.set("Nama gudang harus diisi")
                 return
-            if data['barang'] == "Pilih gudang":
+            if data['gudang'] == "Pilih gudang":
                 msgtxt.set("Pilih gudang atau tambahkan gudang baru")
                 return
             if data['barang'] == "":
                 msgtxt.set("Nama barang perlu diisi")
                 return
-            if data['awal'] == "":
+            if data['saldo'] == "":
                 msgtxt.set("Saldo awal perlu diisi")
                 return
             try:
-                data['awal'] = int(data['awal'])
+                data['saldo'] = int(data['saldo'])
             except Exception:
                 msgtxt.set("Saldo harus berupa bilangan bulat")
                 return
@@ -74,6 +75,8 @@ class CreatePage(Frame):
                 refresh()
             except Exception:
                 messagebox.showerror("Error","Terjadi kesalahan saat menambahkan barang")
+
+        root.binder = submitForm
 
         def fetchgudang():
             c.execute("""

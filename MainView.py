@@ -16,8 +16,11 @@ db = "./StockGudang/data/stock.db"
 conn = sqlite3.connect(db)
 
 def switchpage(target):
-    pages[target].refreshpage()
+    if target == switchpage.curr:
+        return
+    pages[target].refreshpage(root)
     pages[target].tkraise()
+    switchpage.curr = target
 
 def logout():
     res = messagebox.askokcancel("Logout","Are you sure?")
@@ -39,7 +42,7 @@ if __name__ == '__main__':
     root.configure(bg=bgcolor)
     root.iconphoto(False, PhotoImage(file='./StockGudang/asset/SATP-1.png'))
     # style = ThemedStyle(root)
-    # style.theme_use('vista')
+    # style.theme_use('arc')
 
     mymenu = Menu(root)
     manage = Menu(mymenu, tearoff=0)
@@ -61,18 +64,18 @@ if __name__ == '__main__':
     root.grid_rowconfigure(0, weight=1)
     root.grid_columnconfigure(0, weight=1)
     
-    # pages = {"LoginPage": LoginPage(root, controller=addmenu)}
     pages = {}
 
-    for page in (InsertPage, CreatePage, UpdatePage, DeletePage, ExportPage):
+    for page in (InsertPage, CreatePage, UpdatePage, DeletePage, ExportPage, RegisterPage):
         page_name = page.__name__
         pages[page_name] = page(root, db=conn)
         pages[page_name].grid(row=0, column=0, sticky="nsew")
 
-    for page in (RegisterPage, LoginPage):
-        page_name = page.__name__
-        pages[page_name] = page(root, controller=login, db=conn)
-        pages[page_name].grid(row=0, column=0, sticky="nsew")
+    
+    pages["LoginPage"] = LoginPage(root, controller=login, db=conn)
+    pages["LoginPage"].grid(row=0, column=0, sticky="nsew")
+    pages["LoginPage"].refreshpage(root)
+    switchpage.curr = "LoginPage"
 
     root.deiconify()
     root.mainloop()

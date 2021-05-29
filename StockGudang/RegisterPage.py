@@ -1,13 +1,14 @@
-from StockGudang.style.Styles import *
+from .style.Styles import *
 from PIL import ImageTk, Image
 from tkinter import Label as TkLab, messagebox
 import hashlib
 
 class RegisterPage(Frame):
-    def refreshpage(self):
+    def refreshpage(self, root):
+        root.bind('<Return>', lambda x: self.binder())
         self.refresher()
 
-    def __init__(root, *args, controller, **kwargs):
+    def __init__(root, *args, **kwargs):
         conn = kwargs['db']
         c = conn.cursor()
         Frame.__init__(root, *args, **kwargs, bg=bgcolor)
@@ -56,6 +57,8 @@ class RegisterPage(Frame):
                 refresh()
             except Exception:
                 messagebox.showerror("Error","Register failed")
+
+        root.binder = confirmReg
 
         header = Frame(root)
         img = Image.open('./StockGudang/asset/SATP-1.png').resize((75, 75), Image.ANTIALIAS)

@@ -1,10 +1,11 @@
-from StockGudang.style.Styles import *
+from .style.Styles import *
 from PIL import ImageTk, Image
 from tkinter import Label as TkLab, font
 import hashlib
 
 class LoginPage(Frame):
-    def refreshpage(self):
+    def refreshpage(self, root):
+        root.bind('<Return>', lambda x: self.binder())
         self.refresher()
 
     def __init__(root, *args, controller, **kwargs):
@@ -18,7 +19,7 @@ class LoginPage(Frame):
             msgtxt.set("")
 
         root.refresher = refresh
-
+        
         def confirmLogin():
             data = {
                 'name': name.get(),
@@ -42,7 +43,8 @@ class LoginPage(Frame):
             msgtxt.set("")
             User.name = data['name']
             controller()
-        root.bind('<Return>', confirmLogin) 
+
+        root.binder = confirmLogin
 
         header = Frame(root)
         img = Image.open('./StockGudang/asset/SATP-1.png').resize((75, 75), Image.ANTIALIAS)

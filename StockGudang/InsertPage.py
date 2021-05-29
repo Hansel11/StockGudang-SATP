@@ -1,14 +1,10 @@
+from .style.Styles import *
 from tkinter import messagebox
 from datetime import datetime
 
-from StockGudang.style.Styles import *
-
 class InsertPage(Frame):
-    # def refreshpage(self, *args):
-    #     self.destroy()
-    #     self.__init__(self, *args, db=self.db)
-
-    def refreshpage(self):
+    def refreshpage(self, root):
+        root.bind('<Return>', lambda x: self.binder())
         self.refresher()
 
     def __init__(root, *args, **kwargs):
@@ -17,6 +13,7 @@ class InsertPage(Frame):
         Frame.__init__(root, *args, **kwargs)
 
         saldo = {
+            "notint" : False,
             "awal" : 0,
             "beli" : 0,
             "pakai" : 0,
@@ -54,8 +51,10 @@ class InsertPage(Frame):
             kw = [*kwargs.keys()][0]
             try:
                 saldo[kw] = int(kwargs[kw].get())
+                saldo["notint"] = False
             except Exception:
                 saldo[kw] = 0
+                saldo["notint"] = True
             res = saldo['awal'] + saldo['beli'] - saldo['pakai'] - saldo['ret']
             saldo['akhir'] = res
             akhir.configure(state=NORMAL)
@@ -88,7 +87,7 @@ class InsertPage(Frame):
             )
             conn.commit()
 
-        def confirmchanges():
+        def submitForm():
             data = {
                 'gudang' : gudang.get(),
                 'barang': barang.get(),
@@ -103,8 +102,11 @@ class InsertPage(Frame):
             if data['barang'] == "Pilih barang":
                 msgtxt.set("Barang perlu dipilih")
                 return
-            if data['beli'] == "" and data['pakai'] == "" and data['ret'] == "":
+            if pembelian.get() == "" and pemakaian.get() == "" and retur.get() == "":
                 msgtxt.set("Pembelian, Pemakaian, atau Retur perlu diisi")
+                return
+            if data['notint']:
+                msgtxt.set("Pembelian, Pemakaian, atau Retur harus berupa bilangan bulat")
                 return
             if data["akhir"] < 0:
                 msgtxt.set("Saldo tidak mencukupi pemakaian")
@@ -119,6 +121,8 @@ class InsertPage(Frame):
                 refresh()
             except Exception:
                 messagebox.showerror("Error","Terjadi kesalahan saat memasukan data")
+
+        root.binder = submitForm
 
         def fetchGudang():
             c.execute(
@@ -226,7 +230,7 @@ class InsertPage(Frame):
         fetchGudang()
         form.pack()
 
-        ttk.Button(root, text="Confirm",command=confirmchanges).pack(pady=(20,0))
+        ttk.Button(root, text="Confirm",command=submitForm).pack(pady=(20,0))
 
         msgtxt = StringVar()
         Label(root, textvariable=msgtxt, fg="red", bg=bgcolor, pady=10).pack()

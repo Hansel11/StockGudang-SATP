@@ -1,5 +1,6 @@
+from .style.Styles import *
+from datetime import datetime
 from tkinter import messagebox
-from StockGudang.style.Styles import *
 from tkcalendar import DateEntry
 from tkinter.filedialog import asksaveasfilename
 from xlsxwriter.workbook import Workbook
@@ -26,15 +27,19 @@ class DateEntry(DateEntry):
                         **kwargs)
 
 class ExportPage(Frame):
-    def refreshpage(self):
-        pass
+    def refreshpage(self, root):
+        self.refresher()
+        root.bind('<Return>', lambda x: self.binder())
 
     def __init__(root, *args, **kwargs):
         conn = kwargs['db']
         Frame.__init__(root, *args, **kwargs)
 
-        # style = ttk.Style(root)
-        # style.theme_use('clam')
+        def refresh():
+            start.set_date(datetime.today())
+            end.set_date(datetime.today())
+        
+        root.refresher = refresh
 
         def export():
             data = {
@@ -86,6 +91,8 @@ class ExportPage(Frame):
                 messagebox.showinfo("Success","Export Successful")
             except Exception:
                 messagebox.showerror("Error","Export Failed")
+
+        root.binder = export
 
         c=conn.cursor()
         TitleLabel(root, text="Export to Excel").pack()

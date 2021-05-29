@@ -1,8 +1,9 @@
-from StockGudang.style.Styles import *
+from .style.Styles import *
 from tkinter import messagebox
 
 class DeletePage(Frame):
-    def refreshpage(self):
+    def refreshpage(self, root):
+        root.bind('<Return>', lambda x: self.binder())
         self.refresher()
 
     def __init__(root, *args, **kwargs):
@@ -48,6 +49,8 @@ class DeletePage(Frame):
                 refresh()
             except Exception:
                 messagebox.showerror("Error","Terjadi kesalahan saat menghapus barang")
+
+        root.binder = submitForm
 
         def fetchGudang():
             c.execute("""
