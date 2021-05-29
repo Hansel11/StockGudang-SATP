@@ -49,8 +49,7 @@ class RegisterPage(Frame):
                 msgtxt.set("Username sudah pernah terdaftar")
                 return
             data['pass'] = hashlib.sha256(data['pass'].encode('utf-8')).hexdigest()
-            msgtxt.set("") 
-            print(str(data['pass']))
+            msgtxt.set("")
             try:
                 register(data)
                 messagebox.showinfo("Success","User berhasil terdaftar")
