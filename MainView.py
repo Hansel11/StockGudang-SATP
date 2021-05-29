@@ -1,19 +1,18 @@
-from pages.RegisterPage import RegisterPage
 from tkinter import Menu, PhotoImage, Tk, messagebox
-from style.Styles import bgcolor
+from StockGudang.style.Styles import bgcolor
 # from ttkthemes import ThemedStyle
 
-from pages.LoginPage import LoginPage
-from pages.InsertPage import InsertPage
-from pages.CreatePage import CreatePage
-from pages.UpdatePage import UpdatePage
-from pages.DeletePage import DeletePage
-from pages.ExportPage import ExportPage
-from pages.RegisterPage import RegisterPage
+from StockGudang.LoginPage import LoginPage
+from StockGudang.InsertPage import InsertPage
+from StockGudang.CreatePage import CreatePage
+from StockGudang.UpdatePage import UpdatePage
+from StockGudang.DeletePage import DeletePage
+from StockGudang.ExportPage import ExportPage
+from StockGudang.RegisterPage import RegisterPage
 
 import sqlite3
 
-db = "./data/stock.db"
+db = "./StockGudang/data/stock.db"
 conn = sqlite3.connect(db)
 
 def switchpage(target):
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     root.title("Stock Gudang")
     root.geometry("500x500")
     root.configure(bg=bgcolor)
-    root.iconphoto(False, PhotoImage(file='./asset/SATP-1.png'))
+    root.iconphoto(False, PhotoImage(file='./StockGudang/asset/SATP-1.png'))
     # style = ThemedStyle(root)
     # style.theme_use('vista')
 
